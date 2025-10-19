@@ -1,18 +1,27 @@
-import '@/app/ui/global.css';
-import { inter } from '@/app/ui/fonts';
-import { DarkModeProvider } from '@/app/contexts/DarkModeContext';
- 
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { AuthProvider } from "@/app/contexts/AuthContext";
+import { DarkModeProvider } from "@/app/contexts/DarkModeContext";
+
+const inter = Inter({ subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  title: "Academic Check Sheet - AUN",
+  description: "Comprehensive academic progress tracking system",
+};
+
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200`}>
-        <DarkModeProvider>
-          {children}
-        </DarkModeProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className}>
+        <AuthProvider>
+          <DarkModeProvider>{children}</DarkModeProvider>
+        </AuthProvider>
       </body>
     </html>
   );

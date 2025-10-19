@@ -1,7 +1,13 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  experimental: {
+    optimizePackageImports: ['@heroicons/react']
+  },
+  // Alternative: Configure font loading with fallbacks
+  async rewrites() {
+    return [];
+  }
 };
 
 export default nextConfig;
