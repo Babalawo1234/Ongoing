@@ -91,14 +91,19 @@ export default function CoursesPage() {
   };
 
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">My Courses</h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">Browse courses organized by level</p>
+    <div className="page-transition">
+      <div className="mb-8 animate-slide-in-down">
+        <h1 className="text-4xl font-bold gradient-text mb-2">My Courses</h1>
+        <p className="text-lg text-gray-600 dark:text-gray-400">Browse courses organized by level</p>
+        {user && user.course && (
+          <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
+            {user.name} • {user.course} • {user.yearOfStudy ? `${user.yearOfStudy} Level` : ''}
+          </p>
+        )}
       </div>
 
       {/* Level Selector */}
-      <div className="mb-6 bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+      <div className="mb-6 modern-card p-6 animate-slide-in-left">
         <div className="flex flex-wrap gap-3">
           {levels.map(level => {
             const stats = calculateLevelStats(level);
@@ -106,10 +111,10 @@ export default function CoursesPage() {
               <button
                 key={level}
                 onClick={() => setSelectedLevel(level)}
-                className={`flex-1 min-w-[200px] px-6 py-4 rounded-lg text-left transition-all ${
+                className={`flex-1 min-w-[200px] px-6 py-4 rounded-xl text-left transition-all duration-300 transform hover:scale-105 ${
                   selectedLevel === level
-                    ? 'bg-blue-600 text-white shadow-lg scale-105'
-                    : 'bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-2xl scale-105 animate-glow'
+                    : 'bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 hover:shadow-lg'
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
@@ -127,7 +132,7 @@ export default function CoursesPage() {
       </div>
 
       {/* Course List */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+      <div className="modern-card animate-fadeIn">
         <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{selectedLevel} Courses</h2>
           <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
@@ -140,7 +145,7 @@ export default function CoursesPage() {
               {selectedCourses.map(course => (
                 <div
                   key={course.id}
-                  className={`border rounded-lg p-5 transition-all ${
+                  className={`border rounded-xl p-5 transition-all duration-500 transform hover:-translate-y-1 hover:shadow-xl ${
                     course.completed
                       ? 'border-green-300 bg-green-50 dark:bg-green-900/20 dark:border-green-700'
                       : 'border-gray-300 bg-gray-50 dark:bg-gray-700/50 dark:border-gray-600'
@@ -194,26 +199,26 @@ export default function CoursesPage() {
       </div>
 
       {/* Summary Stats */}
-      <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Overall Summary</h2>
+      <div className="mt-8 modern-card p-6 animate-slide-in-left">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Overall Summary</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+          <div className="text-center p-6 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 rounded-xl hover-lift stagger-1">
             <div className="text-2xl font-bold text-gray-900 dark:text-white">{courses.length}</div>
             <div className="text-sm text-gray-600 dark:text-gray-400">Total Courses</div>
           </div>
-          <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+          <div className="text-center p-6 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/30 rounded-xl hover-lift stagger-2">
             <div className="text-2xl font-bold text-green-600 dark:text-green-400">
               {courses.filter(c => c.completed).length}
             </div>
             <div className="text-sm text-gray-600 dark:text-gray-400">Completed</div>
           </div>
-          <div className="text-center p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+          <div className="text-center p-6 bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/30 rounded-xl hover-lift stagger-3">
             <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
               {courses.filter(c => !c.completed).length}
             </div>
             <div className="text-sm text-gray-600 dark:text-gray-400">In Progress</div>
           </div>
-          <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+          <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/30 rounded-xl hover-lift stagger-4">
             <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
               {courses.reduce((sum, c) => sum + c.credits, 0)}
             </div>

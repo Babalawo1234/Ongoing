@@ -1,0 +1,12 @@
+[
+  {
+    "catalog_year_id": 1,
+    "year": "2018",
+    "is_active": true
+  },
+  {
+    "catalog_year_id": 2,
+    "year": "2022",
+    "is_active": true
+  }
+]

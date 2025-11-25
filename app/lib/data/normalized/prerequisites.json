@@ -1,0 +1,22 @@
+[
+  {
+    "course_id": 8,
+    "prerequisite_course_id": 5,
+    "is_mandatory": true
+  },
+  {
+    "course_id": 11,
+    "prerequisite_course_id": 8,
+    "is_mandatory": true
+  },
+  {
+    "course_id": 12,
+    "prerequisite_course_id": 9,
+    "is_mandatory": true
+  },
+  {
+    "course_id": 40,
+    "prerequisite_course_id": 36,
+    "is_mandatory": true
+  }
+]

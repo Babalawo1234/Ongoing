@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useAuth } from '@/app/contexts/AuthContext';
+import { updateUserCourse } from '@/app/lib/courseData';
 import {
   AcademicCapIcon,
   ChartBarIcon,
@@ -22,63 +24,75 @@ interface Course {
   grade: Grade;
 }
 
-const initialCourses: Course[] = [
-  // 100 Level
-  { id: '1', code: 'CS 101', title: 'Introduction to Computer Science', credits: 3, level: '100L', status: 'Not Started', completed: false, grade: '' },
-  { id: '2', code: 'MATH 101', title: 'Calculus I', credits: 3, level: '100L', status: 'Not Started', completed: false, grade: '' },
-  { id: '3', code: 'ENG 101', title: 'English Composition', credits: 2, level: '100L', status: 'Not Started', completed: false, grade: '' },
-  { id: '4', code: 'PHY 101', title: 'Physics I', credits: 3, level: '100L', status: 'Not Started', completed: false, grade: '' },
-  
-  // 200 Level
-  { id: '5', code: 'CS 201', title: 'Data Structures', credits: 3, level: '200L', status: 'Not Started', completed: false, grade: '' },
-  { id: '6', code: 'CS 202', title: 'Computer Architecture', credits: 3, level: '200L', status: 'Not Started', completed: false, grade: '' },
-  { id: '7', code: 'MATH 201', title: 'Discrete Mathematics', credits: 3, level: '200L', status: 'Not Started', completed: false, grade: '' },
-  { id: '8', code: 'CS 203', title: 'Object-Oriented Programming', credits: 3, level: '200L', status: 'Not Started', completed: false, grade: '' },
-  { id: '9', code: 'CS 204', title: 'Database Systems', credits: 3, level: '200L', status: 'Not Started', completed: false, grade: '' },
-  
-  // 300 Level
-  { id: '10', code: 'CS 301', title: 'Algorithms', credits: 4, level: '300L', status: 'Not Started', completed: false, grade: '' },
-  { id: '11', code: 'CS 302', title: 'Operating Systems', credits: 3, level: '300L', status: 'Not Started', completed: false, grade: '' },
-  { id: '12', code: 'CS 303', title: 'Software Engineering', credits: 3, level: '300L', status: 'Not Started', completed: false, grade: '' },
-  { id: '13', code: 'CS 304', title: 'Computer Networks', credits: 3, level: '300L', status: 'Not Started', completed: false, grade: '' },
-  { id: '14', code: 'CS 305', title: 'Web Development', credits: 3, level: '300L', status: 'Not Started', completed: false, grade: '' },
-  { id: '15', code: 'CS 306', title: 'Artificial Intelligence', credits: 4, level: '300L', status: 'Not Started', completed: false, grade: '' },
-  
-  // 400 Level
-  { id: '16', code: 'CS 401', title: 'Machine Learning', credits: 4, level: '400L', status: 'Not Started', completed: false, grade: '' },
-  { id: '17', code: 'CS 402', title: 'Computer Graphics', credits: 3, level: '400L', status: 'Not Started', completed: false, grade: '' },
-  { id: '18', code: 'CS 403', title: 'Cybersecurity', credits: 3, level: '400L', status: 'Not Started', completed: false, grade: '' },
-  { id: '19', code: 'CS 404', title: 'Final Year Project', credits: 6, level: '400L', status: 'Not Started', completed: false, grade: '' },
-];
 
 export default function CheckSheetPage() {
-  // Use lazy initialization to load from localStorage immediately
-  const [courses, setCourses] = useState<Course[]>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('academicCourses');
+  const { user } = useAuth();
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [selectedLevel, setSelectedLevel] = useState('all');
+  const [loading, setLoading] = useState(true);
+
+  // Load user-specific courses
+  useEffect(() => {
+    if (!user) return;
+    
+    const loadCourses = async () => {
+      setLoading(true);
+      const userCoursesKey = `user_courses_${user.id}`;
+      const saved = localStorage.getItem(userCoursesKey);
+      
       if (saved) {
         try {
-          return JSON.parse(saved);
+          const userCourses = JSON.parse(saved);
+          // Map to Course format with status
+          const mappedCourses = userCourses.map((c: any) => ({
+            ...c,
+            status: c.completed ? 'Completed' : 'Not Started'
+          }));
+          setCourses(mappedCourses);
         } catch (e) {
-          console.error('Failed to parse saved courses:', e);
+          console.error('Failed to parse courses:', e);
+        }
+      } else if (user.course) {
+        // Initialize courses for existing users who don't have courses yet
+        const { initializeUserCourses } = await import('@/app/lib/courseData');
+        initializeUserCourses(user.id, user.course);
+        const newSaved = localStorage.getItem(userCoursesKey);
+        if (newSaved) {
+          const userCourses = JSON.parse(newSaved);
+          const mappedCourses = userCourses.map((c: any) => ({
+            ...c,
+            status: c.completed ? 'Completed' : 'Not Started'
+          }));
+          setCourses(mappedCourses);
         }
       }
-    }
-    return initialCourses;
-  });
-  const [selectedLevel, setSelectedLevel] = useState('all');
+      setLoading(false);
+    };
+    
+    loadCourses();
 
-  // Save to localStorage whenever courses change
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('academicCourses', JSON.stringify(courses));
-      // Dispatch event for other components
-      window.dispatchEvent(new Event('storage'));
-    }
-  }, [courses]);
+    // Listen for updates
+    const handleStorage = () => {
+      const userCoursesKey = `user_courses_${user.id}`;
+      const saved = localStorage.getItem(userCoursesKey);
+      if (saved) {
+        const userCourses = JSON.parse(saved);
+        const mappedCourses = userCourses.map((c: any) => ({
+          ...c,
+          status: c.completed ? 'Completed' : 'Not Started'
+        }));
+        setCourses(mappedCourses);
+      }
+    };
+
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, [user]);
 
   const updateCourseStatus = (courseId: string, newStatus: CourseStatus) => {
-    setCourses(courses.map(course =>
+    if (!user) return;
+    
+    const updatedCourses = courses.map(course =>
       course.id === courseId
         ? { 
             ...course, 
@@ -87,19 +101,53 @@ export default function CheckSheetPage() {
             grade: newStatus !== 'Completed' ? '' : course.grade
           }
         : course
-    ));
+    );
+    
+    setCourses(updatedCourses);
+    
+    // Update in localStorage
+    const userCoursesKey = `user_courses_${user.id}`;
+    localStorage.setItem(userCoursesKey, JSON.stringify(updatedCourses));
+    window.dispatchEvent(new Event('storage'));
   };
 
   const updateGrade = (courseId: string, grade: Grade) => {
-    setCourses(courses.map(course =>
+    if (!user) return;
+    
+    const updatedCourses = courses.map(course =>
       course.id === courseId ? { ...course, grade } : course
-    ));
+    );
+    
+    setCourses(updatedCourses);
+    
+    // Update in localStorage
+    const userCoursesKey = `user_courses_${user.id}`;
+    localStorage.setItem(userCoursesKey, JSON.stringify(updatedCourses));
+    window.dispatchEvent(new Event('storage'));
   };
 
-  const resetData = () => {
+  const resetData = async () => {
+    if (!user || !user.course) return;
+    
     if (confirm('Are you sure you want to reset all data? This action cannot be undone.')) {
-      setCourses(initialCourses);
-      localStorage.removeItem('academicCourses');
+      const userCoursesKey = `user_courses_${user.id}`;
+      localStorage.removeItem(userCoursesKey);
+      
+      // Reinitialize courses
+      const { initializeUserCourses } = await import('@/app/lib/courseData');
+      initializeUserCourses(user.id, user.course);
+      
+      const newSaved = localStorage.getItem(userCoursesKey);
+      if (newSaved) {
+        const userCourses = JSON.parse(newSaved);
+        const mappedCourses = userCourses.map((c: any) => ({
+          ...c,
+          status: c.completed ? 'Completed' : 'Not Started'
+        }));
+        setCourses(mappedCourses);
+      }
+      
+      window.dispatchEvent(new Event('storage'));
     }
   };
 
@@ -154,14 +202,27 @@ export default function CheckSheetPage() {
     return acc;
   }, {} as Record<string, Course[]>);
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
   return (
     <div>
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Academic Check Sheet</h1>
-            <p className="mt-2 text-gray-600">Track your course completion and grades</p>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Academic Check Sheet</h1>
+            <p className="mt-2 text-gray-600 dark:text-gray-400">Track your course completion and grades</p>
+            {user && user.course && (
+              <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
+                {user.name} • {user.course} • {courses.length} Total Courses
+              </p>
+            )}
           </div>
           <div className="flex gap-3 no-print">
             <button

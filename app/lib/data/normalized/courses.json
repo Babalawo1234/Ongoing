@@ -1,0 +1,891 @@
+[
+  {
+    "course_id": 1,
+    "course_code": "PTE101",
+    "course_name": "Introduction to Petroleum Engineering",
+    "credits": 3,
+    "department_id": 1
+  },
+  {
+    "course_id": 2,
+    "course_code": "PTE102",
+    "course_name": "Engineering Drawing and CAD",
+    "credits": 3,
+    "department_id": 1
+  },
+  {
+    "course_id": 3,
+    "course_code": "PTE103",
+    "course_name": "General Chemistry for Engineers",
+    "credits": 4,
+    "department_id": 1
+  },
+  {
+    "course_id": 4,
+    "course_code": "PTE104",
+    "course_name": "Engineering Mathematics I",
+    "credits": 4,
+    "department_id": 1
+  },
+  {
+    "course_id": 5,
+    "course_code": "PTE201",
+    "course_name": "Geology for Petroleum Engineers",
+    "credits": 4,
+    "department_id": 1
+  },
+  {
+    "course_id": 6,
+    "course_code": "PTE202",
+    "course_name": "Fluid Mechanics",
+    "credits": 4,
+    "department_id": 1
+  },
+  {
+    "course_id": 7,
+    "course_code": "PTE203",
+    "course_name": "Thermodynamics",
+    "credits": 3,
+    "department_id": 1
+  },
+  {
+    "course_id": 8,
+    "course_code": "PTE204",
+    "course_name": "Reservoir Engineering I",
+    "credits": 4,
+    "department_id": 1
+  },
+  {
+    "course_id": 9,
+    "course_code": "PTE205",
+    "course_name": "Drilling Engineering I",
+    "credits": 4,
+    "department_id": 1
+  },
+  {
+    "course_id": 10,
+    "course_code": "PTE206",
+    "course_name": "Petrophysics",
+    "credits": 3,
+    "department_id": 1
+  },
+  {
+    "course_id": 11,
+    "course_code": "PTE301",
+    "course_name": "Reservoir Engineering II",
+    "credits": 4,
+    "department_id": 1
+  },
+  {
+    "course_id": 12,
+    "course_code": "PTE302",
+    "course_name": "Drilling Engineering II",
+    "credits": 4,
+    "department_id": 1
+  },
+  {
+    "course_id": 13,
+    "course_code": "PTE303",
+    "course_name": "Production Engineering",
+    "credits": 4,
+    "department_id": 1
+  },
+  {
+    "course_id": 14,
+    "course_code": "PTE304",
+    "course_name": "Well Logging and Formation Evaluation",
+    "credits": 3,
+    "department_id": 1
+  },
+  {
+    "course_id": 15,
+    "course_code": "PTE305",
+    "course_name": "Petroleum Economics",
+    "credits": 3,
+    "department_id": 1
+  },
+  {
+    "course_id": 16,
+    "course_code": "PTE306",
+    "course_name": "Natural Gas Engineering",
+    "credits": 4,
+    "department_id": 1
+  },
+  {
+    "course_id": 17,
+    "course_code": "PTE401",
+    "course_name": "Enhanced Oil Recovery",
+    "credits": 4,
+    "department_id": 1
+  },
+  {
+    "course_id": 18,
+    "course_code": "PTE402",
+    "course_name": "Offshore Engineering",
+    "credits": 3,
+    "department_id": 1
+  },
+  {
+    "course_id": 19,
+    "course_code": "PTE403",
+    "course_name": "Petroleum Refining",
+    "credits": 3,
+    "department_id": 1
+  },
+  {
+    "course_id": 20,
+    "course_code": "PTE404",
+    "course_name": "Well Completion and Stimulation",
+    "credits": 4,
+    "department_id": 1
+  },
+  {
+    "course_id": 21,
+    "course_code": "PTE405",
+    "course_name": "Reservoir Simulation",
+    "credits": 4,
+    "department_id": 1
+  },
+  {
+    "course_id": 22,
+    "course_code": "PTE406",
+    "course_name": "Health, Safety and Environment",
+    "credits": 3,
+    "department_id": 1
+  },
+  {
+    "course_id": 23,
+    "course_code": "PTE499",
+    "course_name": "Capstone Project",
+    "credits": 6,
+    "department_id": 1
+  },
+  {
+    "course_id": 24,
+    "course_code": "CHE101",
+    "course_name": "Introduction to Chemical Engineering",
+    "credits": 3,
+    "department_id": 2
+  },
+  {
+    "course_id": 25,
+    "course_code": "CHE102",
+    "course_name": "General Chemistry I",
+    "credits": 4,
+    "department_id": 2
+  },
+  {
+    "course_id": 26,
+    "course_code": "CHE103",
+    "course_name": "Engineering Mathematics I",
+    "credits": 4,
+    "department_id": 2
+  },
+  {
+    "course_id": 27,
+    "course_code": "CHE104",
+    "course_name": "Material and Energy Balance",
+    "credits": 4,
+    "department_id": 2
+  },
+  {
+    "course_id": 28,
+    "course_code": "CHE201",
+    "course_name": "Organic Chemistry",
+    "credits": 4,
+    "department_id": 2
+  },
+  {
+    "course_id": 29,
+    "course_code": "CHE202",
+    "course_name": "Physical Chemistry",
+    "credits": 4,
+    "department_id": 2
+  },
+  {
+    "course_id": 30,
+    "course_code": "CHE203",
+    "course_name": "Fluid Mechanics",
+    "credits": 4,
+    "department_id": 2
+  },
+  {
+    "course_id": 31,
+    "course_code": "CHE204",
+    "course_name": "Chemical Engineering Thermodynamics",
+    "credits": 4,
+    "department_id": 2
+  },
+  {
+    "course_id": 32,
+    "course_code": "CHE205",
+    "course_name": "Chemical Process Calculations",
+    "credits": 3,
+    "department_id": 2
+  },
+  {
+    "course_id": 33,
+    "course_code": "CHE206",
+    "course_name": "Analytical Chemistry",
+    "credits": 3,
+    "department_id": 2
+  },
+  {
+    "course_id": 34,
+    "course_code": "CHE301",
+    "course_name": "Heat Transfer",
+    "credits": 4,
+    "department_id": 2
+  },
+  {
+    "course_id": 35,
+    "course_code": "CHE302",
+    "course_name": "Mass Transfer",
+    "credits": 4,
+    "department_id": 2
+  },
+  {
+    "course_id": 36,
+    "course_code": "CHE303",
+    "course_name": "Chemical Reaction Engineering I",
+    "credits": 4,
+    "department_id": 2
+  },
+  {
+    "course_id": 37,
+    "course_code": "CHE304",
+    "course_name": "Process Control",
+    "credits": 3,
+    "department_id": 2
+  },
+  {
+    "course_id": 38,
+    "course_code": "CHE305",
+    "course_name": "Separation Processes",
+    "credits": 4,
+    "department_id": 2
+  },
+  {
+    "course_id": 39,
+    "course_code": "CHE306",
+    "course_name": "Industrial Chemistry",
+    "credits": 3,
+    "department_id": 2
+  },
+  {
+    "course_id": 40,
+    "course_code": "CHE401",
+    "course_name": "Chemical Reaction Engineering II",
+    "credits": 4,
+    "department_id": 2
+  },
+  {
+    "course_id": 41,
+    "course_code": "CHE402",
+    "course_name": "Process Design and Economics",
+    "credits": 3,
+    "department_id": 2
+  },
+  {
+    "course_id": 42,
+    "course_code": "CHE403",
+    "course_name": "Petrochemical Engineering",
+    "credits": 3,
+    "department_id": 2
+  },
+  {
+    "course_id": 43,
+    "course_code": "CHE404",
+    "course_name": "Polymer Engineering",
+    "credits": 4,
+    "department_id": 2
+  },
+  {
+    "course_id": 44,
+    "course_code": "CHE405",
+    "course_name": "Environmental Engineering",
+    "credits": 3,
+    "department_id": 2
+  },
+  {
+    "course_id": 45,
+    "course_code": "CHE406",
+    "course_name": "Process Safety and Hazard Analysis",
+    "credits": 3,
+    "department_id": 2
+  },
+  {
+    "course_id": 46,
+    "course_code": "CHE499",
+    "course_name": "Capstone Project",
+    "credits": 6,
+    "department_id": 2
+  },
+  {
+    "course_id": 47,
+    "course_code": "COS101",
+    "course_name": "Introduction to Computer Science",
+    "credits": 3,
+    "department_id": 6
+  },
+  {
+    "course_id": 48,
+    "course_code": "COS102",
+    "course_name": "Programming Fundamentals",
+    "credits": 4,
+    "department_id": 6
+  },
+  {
+    "course_id": 49,
+    "course_code": "COS103",
+    "course_name": "Computer Mathematics I",
+    "credits": 4,
+    "department_id": 6
+  },
+  {
+    "course_id": 50,
+    "course_code": "COS104",
+    "course_name": "Digital Logic and Computer Organization",
+    "credits": 4,
+    "department_id": 6
+  },
+  {
+    "course_id": 51,
+    "course_code": "COS105",
+    "course_name": "Introduction to Problem Solving",
+    "credits": 3,
+    "department_id": 6
+  },
+  {
+    "course_id": 52,
+    "course_code": "COS106",
+    "course_name": "Technical Communication",
+    "credits": 2,
+    "department_id": 6
+  },
+  {
+    "course_id": 53,
+    "course_code": "COS201",
+    "course_name": "Data Structures and Algorithms",
+    "credits": 4,
+    "department_id": 6
+  },
+  {
+    "course_id": 54,
+    "course_code": "COS202",
+    "course_name": "Object-Oriented Programming",
+    "credits": 4,
+    "department_id": 6
+  },
+  {
+    "course_id": 55,
+    "course_code": "COS203",
+    "course_name": "Computer Architecture",
+    "credits": 4,
+    "department_id": 6
+  },
+  {
+    "course_id": 56,
+    "course_code": "COS204",
+    "course_name": "Discrete Mathematics",
+    "credits": 3,
+    "department_id": 6
+  },
+  {
+    "course_id": 57,
+    "course_code": "COS205",
+    "course_name": "Database Systems",
+    "credits": 4,
+    "department_id": 6
+  },
+  {
+    "course_id": 58,
+    "course_code": "COS206",
+    "course_name": "Web Development Fundamentals",
+    "credits": 3,
+    "department_id": 6
+  },
+  {
+    "course_id": 59,
+    "course_code": "COS207",
+    "course_name": "Computer Mathematics II",
+    "credits": 3,
+    "department_id": 6
+  },
+  {
+    "course_id": 60,
+    "course_code": "COS301",
+    "course_name": "Operating Systems",
+    "credits": 4,
+    "department_id": 6
+  },
+  {
+    "course_id": 61,
+    "course_code": "COS302",
+    "course_name": "Computer Networks",
+    "credits": 4,
+    "department_id": 6
+  },
+  {
+    "course_id": 62,
+    "course_code": "COS303",
+    "course_name": "Software Engineering",
+    "credits": 4,
+    "department_id": 6
+  },
+  {
+    "course_id": 63,
+    "course_code": "COS304",
+    "course_name": "Theory of Computation",
+    "credits": 3,
+    "department_id": 6
+  },
+  {
+    "course_id": 64,
+    "course_code": "COS305",
+    "course_name": "Artificial Intelligence",
+    "credits": 4,
+    "department_id": 6
+  },
+  {
+    "course_id": 65,
+    "course_code": "COS306",
+    "course_name": "Algorithm Design and Analysis",
+    "credits": 3,
+    "department_id": 6
+  },
+  {
+    "course_id": 66,
+    "course_code": "COS307",
+    "course_name": "Computer Graphics",
+    "credits": 3,
+    "department_id": 6
+  },
+  {
+    "course_id": 67,
+    "course_code": "COS401",
+    "course_name": "Machine Learning",
+    "credits": 4,
+    "department_id": 6
+  },
+  {
+    "course_id": 68,
+    "course_code": "COS402",
+    "course_name": "Distributed Systems",
+    "credits": 3,
+    "department_id": 6
+  },
+  {
+    "course_id": 69,
+    "course_code": "COS403",
+    "course_name": "Cybersecurity",
+    "credits": 3,
+    "department_id": 6
+  },
+  {
+    "course_id": 70,
+    "course_code": "COS404",
+    "course_name": "Natural Language Processing",
+    "credits": 3,
+    "department_id": 6
+  },
+  {
+    "course_id": 71,
+    "course_code": "COS405",
+    "course_name": "Cloud Computing",
+    "credits": 3,
+    "department_id": 6
+  },
+  {
+    "course_id": 72,
+    "course_code": "COS406",
+    "course_name": "Blockchain Technology",
+    "credits": 3,
+    "department_id": 6
+  },
+  {
+    "course_id": 73,
+    "course_code": "COS407",
+    "course_name": "Mobile Application Development",
+    "credits": 3,
+    "department_id": 6
+  },
+  {
+    "course_id": 74,
+    "course_code": "COS499",
+    "course_name": "Final Year Project",
+    "credits": 6,
+    "department_id": 6
+  },
+  {
+    "course_id": 75,
+    "course_code": "BUS101",
+    "course_name": "Introduction to Business",
+    "credits": 3,
+    "department_id": 10
+  },
+  {
+    "course_id": 76,
+    "course_code": "BUS102",
+    "course_name": "Principles of Management",
+    "credits": 3,
+    "department_id": 10
+  },
+  {
+    "course_id": 77,
+    "course_code": "BUS103",
+    "course_name": "Business Mathematics",
+    "credits": 3,
+    "department_id": 10
+  },
+  {
+    "course_id": 78,
+    "course_code": "BUS104",
+    "course_name": "Microeconomics",
+    "credits": 3,
+    "department_id": 10
+  },
+  {
+    "course_id": 79,
+    "course_code": "BUS105",
+    "course_name": "Business Communication",
+    "credits": 3,
+    "department_id": 10
+  },
+  {
+    "course_id": 80,
+    "course_code": "BUS106",
+    "course_name": "Introduction to Accounting",
+    "credits": 4,
+    "department_id": 10
+  },
+  {
+    "course_id": 81,
+    "course_code": "BUS201",
+    "course_name": "Organizational Behavior",
+    "credits": 3,
+    "department_id": 10
+  },
+  {
+    "course_id": 82,
+    "course_code": "BUS202",
+    "course_name": "Marketing Principles",
+    "credits": 3,
+    "department_id": 10
+  },
+  {
+    "course_id": 83,
+    "course_code": "BUS203",
+    "course_name": "Financial Accounting",
+    "credits": 4,
+    "department_id": 10
+  },
+  {
+    "course_id": 84,
+    "course_code": "BUS204",
+    "course_name": "Macroeconomics",
+    "credits": 3,
+    "department_id": 10
+  },
+  {
+    "course_id": 85,
+    "course_code": "BUS205",
+    "course_name": "Business Law",
+    "credits": 3,
+    "department_id": 10
+  },
+  {
+    "course_id": 86,
+    "course_code": "BUS206",
+    "course_name": "Operations Management",
+    "credits": 3,
+    "department_id": 10
+  },
+  {
+    "course_id": 87,
+    "course_code": "BUS207",
+    "course_name": "Business Statistics",
+    "credits": 3,
+    "department_id": 10
+  },
+  {
+    "course_id": 88,
+    "course_code": "BUS301",
+    "course_name": "Strategic Management",
+    "credits": 4,
+    "department_id": 10
+  },
+  {
+    "course_id": 89,
+    "course_code": "BUS302",
+    "course_name": "Human Resource Management",
+    "credits": 3,
+    "department_id": 10
+  },
+  {
+    "course_id": 90,
+    "course_code": "BUS303",
+    "course_name": "Financial Management",
+    "credits": 4,
+    "department_id": 10
+  },
+  {
+    "course_id": 91,
+    "course_code": "BUS304",
+    "course_name": "Marketing Management",
+    "credits": 3,
+    "department_id": 10
+  },
+  {
+    "course_id": 92,
+    "course_code": "BUS305",
+    "course_name": "Entrepreneurship",
+    "credits": 3,
+    "department_id": 10
+  },
+  {
+    "course_id": 93,
+    "course_code": "BUS306",
+    "course_name": "Business Analytics",
+    "credits": 3,
+    "department_id": 10
+  },
+  {
+    "course_id": 94,
+    "course_code": "BUS307",
+    "course_name": "International Business",
+    "credits": 3,
+    "department_id": 10
+  },
+  {
+    "course_id": 95,
+    "course_code": "BUS401",
+    "course_name": "Corporate Finance",
+    "credits": 3,
+    "department_id": 10
+  },
+  {
+    "course_id": 96,
+    "course_code": "BUS402",
+    "course_name": "Business Ethics",
+    "credits": 3,
+    "department_id": 10
+  },
+  {
+    "course_id": 97,
+    "course_code": "BUS403",
+    "course_name": "Supply Chain Management",
+    "credits": 3,
+    "department_id": 10
+  },
+  {
+    "course_id": 98,
+    "course_code": "BUS404",
+    "course_name": "Digital Marketing",
+    "credits": 3,
+    "department_id": 10
+  },
+  {
+    "course_id": 99,
+    "course_code": "BUS405",
+    "course_name": "Investment Analysis",
+    "credits": 3,
+    "department_id": 10
+  },
+  {
+    "course_id": 100,
+    "course_code": "BUS406",
+    "course_name": "Business Consulting",
+    "credits": 3,
+    "department_id": 10
+  },
+  {
+    "course_id": 101,
+    "course_code": "BUS499",
+    "course_name": "Business Capstone Project",
+    "credits": 6,
+    "department_id": 10
+  },
+  {
+    "course_id": 102,
+    "course_code": "IFT101",
+    "course_name": "Introduction to Information Technology",
+    "credits": 3,
+    "department_id": 7
+  },
+  {
+    "course_id": 103,
+    "course_code": "IFT102",
+    "course_name": "Programming Basics",
+    "credits": 4,
+    "department_id": 7
+  },
+  {
+    "course_id": 104,
+    "course_code": "IFT103",
+    "course_name": "Computer Hardware and Software",
+    "credits": 3,
+    "department_id": 7
+  },
+  {
+    "course_id": 105,
+    "course_code": "IFT104",
+    "course_name": "Mathematics for IT",
+    "credits": 4,
+    "department_id": 7
+  },
+  {
+    "course_id": 106,
+    "course_code": "IFT105",
+    "course_name": "IT Fundamentals",
+    "credits": 3,
+    "department_id": 7
+  },
+  {
+    "course_id": 107,
+    "course_code": "IFT201",
+    "course_name": "Database Management",
+    "credits": 4,
+    "department_id": 7
+  },
+  {
+    "course_id": 108,
+    "course_code": "IFT202",
+    "course_name": "Web Technologies",
+    "credits": 4,
+    "department_id": 7
+  },
+  {
+    "course_id": 109,
+    "course_code": "IFT203",
+    "course_name": "Network Fundamentals",
+    "credits": 4,
+    "department_id": 7
+  },
+  {
+    "course_id": 110,
+    "course_code": "IFT204",
+    "course_name": "Systems Analysis and Design",
+    "credits": 4,
+    "department_id": 7
+  },
+  {
+    "course_id": 111,
+    "course_code": "IFT205",
+    "course_name": "Data Structures",
+    "credits": 3,
+    "department_id": 7
+  },
+  {
+    "course_id": 112,
+    "course_code": "IFT206",
+    "course_name": "Operating Systems",
+    "credits": 3,
+    "department_id": 7
+  },
+  {
+    "course_id": 113,
+    "course_code": "IFT207",
+    "course_name": "Server Administration",
+    "credits": 3,
+    "department_id": 7
+  },
+  {
+    "course_id": 114,
+    "course_code": "IFT301",
+    "course_name": "Enterprise Systems",
+    "credits": 4,
+    "department_id": 7
+  },
+  {
+    "course_id": 115,
+    "course_code": "IFT302",
+    "course_name": "IT Project Management",
+    "credits": 4,
+    "department_id": 7
+  },
+  {
+    "course_id": 116,
+    "course_code": "IFT303",
+    "course_name": "Cloud Technologies",
+    "credits": 4,
+    "department_id": 7
+  },
+  {
+    "course_id": 117,
+    "course_code": "IFT304",
+    "course_name": "Mobile Computing",
+    "credits": 3,
+    "department_id": 7
+  },
+  {
+    "course_id": 118,
+    "course_code": "IFT305",
+    "course_name": "Information Security",
+    "credits": 4,
+    "department_id": 7
+  },
+  {
+    "course_id": 119,
+    "course_code": "IFT306",
+    "course_name": "Business Intelligence",
+    "credits": 3,
+    "department_id": 7
+  },
+  {
+    "course_id": 120,
+    "course_code": "IFT307",
+    "course_name": "Network Security",
+    "credits": 3,
+    "department_id": 7
+  },
+  {
+    "course_id": 121,
+    "course_code": "IFT401",
+    "course_name": "Advanced Database Systems",
+    "credits": 4,
+    "department_id": 7
+  },
+  {
+    "course_id": 122,
+    "course_code": "IFT402",
+    "course_name": "Enterprise Architecture",
+    "credits": 3,
+    "department_id": 7
+  },
+  {
+    "course_id": 123,
+    "course_code": "IFT403",
+    "course_name": "IT Service Management",
+    "credits": 3,
+    "department_id": 7
+  },
+  {
+    "course_id": 124,
+    "course_code": "IFT404",
+    "course_name": "Digital Transformation",
+    "credits": 3,
+    "department_id": 7
+  },
+  {
+    "course_id": 125,
+    "course_code": "IFT405",
+    "course_name": "IoT and Smart Systems",
+    "credits": 3,
+    "department_id": 7
+  },
+  {
+    "course_id": 126,
+    "course_code": "IFT406",
+    "course_name": "IT Governance and Compliance",
+    "credits": 3,
+    "department_id": 7
+  },
+  {
+    "course_id": 127,
+    "course_code": "IFT499",
+    "course_name": "Capstone Project",
+    "credits": 6,
+    "department_id": 7
+  }
+]

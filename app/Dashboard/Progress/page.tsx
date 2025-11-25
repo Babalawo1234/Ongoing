@@ -107,9 +107,9 @@ export default function ProgressPage() {
   };
 
   return (
-    <div className="page-content">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent mb-2">
+    <div className="page-transition">
+      <div className="mb-8 animate-slide-in-down">
+        <h1 className="text-5xl font-bold gradient-text mb-3">
           Academic Progress
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-400">Track your degree completion status</p>
@@ -121,38 +121,38 @@ export default function ProgressPage() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="stat-card bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-all duration-500" style={{ animationDelay: '0ms' }}>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fadeIn">
+        <div className="modern-card p-6 hover-lift stagger-1" style={{ animationDelay: '0ms' }}>
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Overall Progress</p>
               <p className="text-3xl font-bold text-gray-900 dark:text-white">{overallProgress.toFixed(0)}%</p>
             </div>
-            <div className="p-4 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 shadow-lg">
+            <div className="p-4 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 shadow-lg float-animation">
               <ChartBarIcon className="h-8 w-8 text-white" />
             </div>
           </div>
         </div>
 
-        <div className="stat-card bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-all duration-500" style={{ animationDelay: '100ms' }}>
+        <div className="modern-card p-6 hover-lift stagger-2" style={{ animationDelay: '100ms' }}>
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Credits Earned</p>
               <p className="text-3xl font-bold text-gray-900 dark:text-white">{earnedCredits}/{totalCredits}</p>
             </div>
-            <div className="p-4 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg">
+            <div className="p-4 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg float-animation">
               <AcademicCapIcon className="h-8 w-8 text-white" />
             </div>
           </div>
         </div>
 
-        <div className="stat-card bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-all duration-500" style={{ animationDelay: '200ms' }}>
+        <div className="modern-card p-6 hover-lift stagger-3" style={{ animationDelay: '200ms' }}>
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">Current GPA</p>
               <p className="text-3xl font-bold text-gray-900 dark:text-white">{gpa.toFixed(2)}</p>
             </div>
-            <div className="p-4 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 shadow-lg">
+            <div className="p-4 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 shadow-lg float-animation">
               <TrophyIcon className="h-8 w-8 text-white" />
             </div>
           </div>
@@ -160,19 +160,19 @@ export default function ProgressPage() {
       </div>
 
       {/* Overall Progress Bar */}
-      <div className="stat-card bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-all duration-500 mb-8" style={{ animationDelay: '300ms' }}>
+      <div className="modern-card p-8 hover-lift mb-8 stagger-4" style={{ animationDelay: '300ms' }}>
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Overall Degree Progress</h2>
           <span className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             {overallProgress.toFixed(1)}%
           </span>
         </div>
-        <div className="relative w-full bg-gray-200 dark:bg-gray-700 rounded-full h-6 overflow-hidden shadow-inner">
+        <div className="relative w-full bg-gray-200 dark:bg-gray-700 rounded-full h-8 overflow-hidden shadow-inner">
           <div
-            className="absolute inset-0 bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-600 rounded-full transition-all duration-1000 ease-out shadow-lg animate-gradient"
+            className="absolute inset-0 bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-600 rounded-full shadow-lg animate-gradient animate-progress"
             style={{ width: `${overallProgress}%` }}
           >
-            <div className="absolute inset-0 bg-white/20 animate-pulse" />
+            <div className="absolute inset-0 bg-white/20 shimmer" />
           </div>
         </div>
         <div className="flex items-center justify-between mt-4">
@@ -186,22 +186,22 @@ export default function ProgressPage() {
       </div>
 
       {/* Requirements by Level */}
-      <div className="bg-white rounded-lg shadow">
-        <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-          <h2 className="text-lg font-semibold text-gray-900">Degree Requirements</h2>
+      <div className="modern-card animate-slide-in-left">
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Degree Requirements</h2>
         </div>
         <div className="p-6 space-y-6">
           {requirements.map((req, index) => (
             <div key={index}>
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-medium text-gray-900">{req.category}</h3>
-                <span className="text-sm text-gray-600">
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{req.category}</h3>
+                <span className="text-sm text-gray-600 dark:text-gray-400">
                   {req.completed} / {req.required} courses
                 </span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-3">
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 overflow-hidden shadow-inner">
                 <div
-                  className={`h-3 rounded-full transition-all ${
+                  className={`h-4 rounded-full transition-all duration-1000 animate-progress ${
                     req.percentage === 100
                       ? 'bg-green-600'
                       : req.percentage >= 50

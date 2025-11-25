@@ -98,9 +98,16 @@ export default function SignupPage() {
       return;
     }
 
+    // Email validation - must be @aun.edu.ng
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       setError('Please enter a valid email address');
+      return;
+    }
+    
+    // Domain validation - only AUN emails allowed
+    if (!formData.email.toLowerCase().endsWith('@aun.edu.ng')) {
+      setError('Only AUN email addresses (@aun.edu.ng) are allowed');
       return;
     }
 
@@ -141,6 +148,21 @@ export default function SignupPage() {
 
     if (!formData.degreeType) {
       setError('Please select your degree type');
+      return;
+    }
+    
+    // Degree type validation based on level
+    const isMastersDegree = formData.degreeType.startsWith('M.');
+    const isUndergrad = ['100', '200', '300', '400'].includes(formData.yearOfStudy);
+    const isPostgrad = ['500', '600'].includes(formData.yearOfStudy);
+    
+    if (isMastersDegree && isUndergrad) {
+      setError('Master\'s degree students must select 500 or 600 level');
+      return;
+    }
+    
+    if (!isMastersDegree && isPostgrad) {
+      setError('Postgraduate levels require a Master\'s degree type');
       return;
     }
 
@@ -303,11 +325,12 @@ export default function SignupPage() {
                 required
               >
                 <option value="">Select Year</option>
-                <option value="100">100 Level</option>
-                <option value="200">200 Level</option>
-                <option value="300">300 Level</option>
-                <option value="400">400 Level</option>
-                <option value="500">500 Level</option>
+                <option value="100">100 Level (Undergraduate)</option>
+                <option value="200">200 Level (Undergraduate)</option>
+                <option value="300">300 Level (Undergraduate)</option>
+                <option value="400">400 Level (Undergraduate)</option>
+                <option value="500">500 Level (Master's Year 1)</option>
+                <option value="600">600 Level (Master's Year 2)</option>
               </select>
             </div>
 
@@ -315,16 +338,18 @@ export default function SignupPage() {
               <label htmlFor="catalogYear" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Catalog Year <span className="text-red-500">*</span>
               </label>
-              <input
+              <select
                 id="catalogYear"
                 name="catalogYear"
-                type="text"
                 value={formData.catalogYear}
                 onChange={handleChange}
-                placeholder="2020-2021"
-                className="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-theme"
+                className="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-theme"
                 required
-              />
+              >
+                <option value="">Select Catalog Year</option>
+                <option value="2018">2018</option>
+                <option value="2022">2022</option>
+              </select>
             </div>
           </div>
 
@@ -362,10 +387,18 @@ export default function SignupPage() {
                 required
               >
                 <option value="">Select Degree</option>
-                <option value="B.Sc.">B.Sc. (Bachelor of Science)</option>
-                <option value="B.A.">B.A. (Bachelor of Arts)</option>
-                <option value="B.Eng.">B.Eng. (Bachelor of Engineering)</option>
-                <option value="B.Tech.">B.Tech. (Bachelor of Technology)</option>
+                <optgroup label="Undergraduate Degrees">
+                  <option value="B.Sc.">B.Sc. (Bachelor of Science)</option>
+                  <option value="B.A.">B.A. (Bachelor of Arts)</option>
+                  <option value="B.Eng.">B.Eng. (Bachelor of Engineering)</option>
+                  <option value="B.Tech.">B.Tech. (Bachelor of Technology)</option>
+                </optgroup>
+                <optgroup label="Master's Degrees">
+                  <option value="M.Sc.">M.Sc. (Master of Science)</option>
+                  <option value="M.A.">M.A. (Master of Arts)</option>
+                  <option value="M.Eng.">M.Eng. (Master of Engineering)</option>
+                  <option value="MBA">MBA (Master of Business Administration)</option>
+                </optgroup>
               </select>
             </div>
           </div>

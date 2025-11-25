@@ -286,10 +286,16 @@ export default function AcademicStudentsPage() {
                 </div>
               )}
             </div>
-            <div className="px-6 pb-4">
+            <div className="px-6 pb-4 space-y-2">
+              <button
+                onClick={() => window.location.href = `/academic/students/${student.id}/progress`}
+                className="w-full px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all text-sm font-medium shadow-md hover:shadow-lg"
+              >
+                View Progress
+              </button>
               <button
                 onClick={() => openStudentModal(student)}
-                className="w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium"
+                className="w-full px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm font-medium"
               >
                 View Full Report
               </button>

@@ -8,6 +8,7 @@ import {
   TrashIcon,
   XMarkIcon,
   UserCircleIcon,
+  ChartBarIcon,
 } from '@heroicons/react/24/outline';
 
 interface Student {
@@ -218,14 +219,23 @@ export default function StudentsPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button
+                        onClick={() => window.location.href = `/admin/students/${student.id}/progress`}
+                        className="text-blue-600 hover:text-blue-900 mr-4"
+                        title="View Progress"
+                      >
+                        <ChartBarIcon className="h-5 w-5" />
+                      </button>
+                      <button
                         onClick={() => openModal(student)}
                         className="text-indigo-600 hover:text-indigo-900 mr-4"
+                        title="Edit Student"
                       >
                         <PencilIcon className="h-5 w-5" />
                       </button>
                       <button
                         onClick={() => handleDelete(student.id)}
                         className="text-red-600 hover:text-red-900"
+                        title="Delete Student"
                       >
                         <TrashIcon className="h-5 w-5" />
                       </button>
