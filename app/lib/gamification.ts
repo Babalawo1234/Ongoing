@@ -269,6 +269,7 @@ export class GamificationManager {
   private saveData(data: GamificationData): void {
     if (typeof window === 'undefined') return;
     localStorage.setItem(this.storageKey, JSON.stringify(data));
+    window.dispatchEvent(new Event('gamification_update'));
   }
 
   // Add XP and check for level up

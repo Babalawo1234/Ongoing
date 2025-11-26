@@ -41,14 +41,20 @@ export default function DashboardPage() {
     const manager = new GamificationManager(user.id);
     manager.updateStreak();
     
-    // Get achievements data
-    const gamData = manager.getData();
-    const unlockedCount = gamData.achievements.filter((a: any) => a.unlocked).length;
+    const updateAchievements = () => {
+      const gamData = manager.getData();
+      const unlockedCount = gamData.achievements.filter((a: any) => a.unlocked).length;
+      
+      setStats(prev => ({
+        ...prev,
+        achievementsUnlocked: unlockedCount,
+      }));
+    };
+
+    updateAchievements();
     
-    setStats(prev => ({
-      ...prev,
-      achievementsUnlocked: unlockedCount,
-    }));
+    // Listen for gamification updates
+    window.addEventListener('gamification_update', updateAchievements);
     
     // Show GPA notification on first visit per session
     const hasSeenNotification = sessionStorage.getItem('gpa_notification_shown');
@@ -58,8 +64,13 @@ export default function DashboardPage() {
         setShowGPANotification(true);
         sessionStorage.setItem('gpa_notification_shown', 'true');
       }, 1000);
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(timer);
+        window.removeEventListener('gamification_update', updateAchievements);
+      };
     }
+
+    return () => window.removeEventListener('gamification_update', updateAchievements);
   }, [user]);
 
   // Load planner notes
@@ -162,22 +173,11 @@ export default function DashboardPage() {
         <p className="text-lg text-gray-600 dark:text-gray-400">Welcome back! Here's your academic progress overview.</p>
       </div>
 
-      {/* Gamification Widget */}
-      {user && (
-        <div className="mb-8">
-          <LevelDisplay userId={user.id} compact={true} />
-        </div>
-      )}
-
       {/* Quick Actions */}
-      <div className="grid grid-cols-2 md:grid-cols-2 gap-4 mb-8">
+      <div className="grid grid-cols-1 mb-8">
         <Link href="/dashboard/achievements" className="group p-4 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl text-white hover:shadow-lg transition-all">
           <TrophyIcon className="w-8 h-8 mb-2 group-hover:scale-110 transition-transform" />
           <p className="font-semibold">Achievements</p>
-        </Link>
-        <Link href="/dashboard/checksheet" className="group p-4 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl text-white hover:shadow-lg transition-all">
-          <BookOpenIcon className="w-8 h-8 mb-2 group-hover:scale-110 transition-transform" />
-          <p className="font-semibold">Checksheet</p>
         </Link>
       </div>
 

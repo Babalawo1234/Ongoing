@@ -26,13 +26,16 @@ export default function ManageCoursesPage() {
   const [departments, setDepartments] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterDepartment, setFilterDepartment] = useState<number | 'all'>('all');
+  const [filterCatalogYear, setFilterCatalogYear] = useState<number | 'all'>('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
+  const [catalogYears, setCatalogYears] = useState<any[]>([]);
   const [formData, setFormData] = useState({
     course_code: '',
     course_name: '',
     credits: 3,
     department_id: 0,
+    catalog_year_id: 1,
   });
 
   // Assignment modal state
@@ -56,6 +59,7 @@ export default function ManageCoursesPage() {
     setCourses(db.getCourses());
     setPrograms(db.getPrograms());
     setDepartments(db.getDepartments());
+    setCatalogYears(db.getCatalogYears());
   };
 
   const openModal = (course?: Course) => {
@@ -74,6 +78,7 @@ export default function ManageCoursesPage() {
         course_name: '',
         credits: 3,
         department_id: departments[0]?.department_id || 0,
+        catalog_year_id: catalogYears.find(cy => cy.is_active)?.catalog_year_id || 1,
       });
     }
     setIsModalOpen(true);
@@ -151,9 +156,66 @@ export default function ManageCoursesPage() {
     const updatedProgramCourses = [...programCourses, newAssignment];
     localStorage.setItem('program_courses', JSON.stringify(updatedProgramCourses));
 
-    alert('Course assigned successfully!');
+    // Update all affected students' courses
+    updateStudentProgress(assignmentData.program_id, selectedCourse);
+
+    alert('Course assigned successfully! Student progress has been updated.');
     setIsAssignModalOpen(false);
     setSelectedCourse(null);
+  };
+
+  // Function to update student progress when new courses are added
+  const updateStudentProgress = (programId: number, course: Course) => {
+    const program = programs.find(p => p.program_id === programId);
+    if (!program) return;
+
+    // Get all users from localStorage
+    const usersData = localStorage.getItem('aun_checksheet_users');
+    if (!usersData) return;
+
+    const users = JSON.parse(usersData);
+    let updatedCount = 0;
+
+    // Find students enrolled in this program
+    users.forEach((user: any) => {
+      // Check if user's course matches the program name
+      if (user.course === program.program_name) {
+        const userCoursesKey = `user_courses_${user.id}`;
+        const existingCourses = localStorage.getItem(userCoursesKey);
+        
+        if (existingCourses) {
+          const courses = JSON.parse(existingCourses);
+          
+          // Check if course already exists
+          const courseExists = courses.some((c: any) => c.code === course.course_code);
+          
+          if (!courseExists) {
+            // Add new course to student's course list
+            const newCourse = {
+              id: `${course.course_code?.toLowerCase() || course.course_id}`,
+              code: course.course_code,
+              title: course.course_name,
+              credits: course.credits,
+              level: `${assignmentData.year_required}00L`,
+              semester: assignmentData.semester,
+              elective: assignmentData.elective,
+              completed: false,
+              grade: '',
+            };
+            
+            courses.push(newCourse);
+            localStorage.setItem(userCoursesKey, JSON.stringify(courses));
+            updatedCount++;
+          }
+        }
+      }
+    });
+
+    if (updatedCount > 0) {
+      console.log(`Updated ${updatedCount} student(s) with new course: ${course.course_code}`);
+      // Trigger storage event to notify all open tabs
+      window.dispatchEvent(new Event('storage'));
+    }
   };
 
   const filteredCourses = courses.filter((course) => {
@@ -172,8 +234,8 @@ export default function ManageCoursesPage() {
       </div>
 
       {/* Filters and Actions */}
-      <div className="flex flex-col lg:flex-row gap-4 mb-6">
-        <div className="flex-1 relative">
+      <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 mb-6">
+        <div className="flex-1 min-w-[200px] relative">
           <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
           <input
             type="text"
@@ -186,7 +248,7 @@ export default function ManageCoursesPage() {
         <select
           value={filterDepartment}
           onChange={(e) => setFilterDepartment(e.target.value === 'all' ? 'all' : parseInt(e.target.value))}
-          className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
+          className="w-full sm:w-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
         >
           <option value="all">All Departments</option>
           {departments.map(dept => (
@@ -195,9 +257,21 @@ export default function ManageCoursesPage() {
             </option>
           ))}
         </select>
+        <select
+          value={filterCatalogYear}
+          onChange={(e) => setFilterCatalogYear(e.target.value === 'all' ? 'all' : parseInt(e.target.value))}
+          className="w-full sm:w-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
+        >
+          <option value="all">All Catalog Years</option>
+          {db.getCatalogYears().map(cy => (
+            <option key={cy.catalog_year_id} value={cy.catalog_year_id}>
+              {cy.year} {cy.is_active ? '(Active)' : ''}
+            </option>
+          ))}
+        </select>
         <button
           onClick={() => openModal()}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors whitespace-nowrap"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors whitespace-nowrap"
         >
           <PlusIcon className="h-5 w-5" />
           Add Course
@@ -205,7 +279,7 @@ export default function ManageCoursesPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 border border-gray-200 dark:border-gray-700">
           <p className="text-sm text-gray-600 dark:text-gray-400">Total Courses</p>
           <p className="text-2xl font-bold text-gray-900 dark:text-white">{courses.length}</p>
@@ -227,7 +301,7 @@ export default function ManageCoursesPage() {
       </div>
 
       {/* Courses Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {filteredCourses.length === 0 ? (
           <div className="col-span-full bg-white dark:bg-gray-800 rounded-lg shadow p-12 text-center">
             <BookOpenIcon className="mx-auto h-12 w-12 text-gray-400" />
@@ -339,7 +413,7 @@ export default function ManageCoursesPage() {
                       placeholder="e.g., Introduction to Computer Science"
                     />
                   </div>
-                  <div className="col-span-2">
+                  <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Department
                     </label>
@@ -353,6 +427,23 @@ export default function ManageCoursesPage() {
                       {departments.map(dept => (
                         <option key={dept.department_id} value={dept.department_id}>
                           {dept.department_name} ({dept.school})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Catalog Year
+                    </label>
+                    <select
+                      required
+                      value={formData.catalog_year_id}
+                      onChange={(e) => setFormData({ ...formData, catalog_year_id: parseInt(e.target.value) })}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    >
+                      {catalogYears.map(cy => (
+                        <option key={cy.catalog_year_id} value={cy.catalog_year_id}>
+                          {cy.year} {cy.is_active ? '(Active)' : ''}
                         </option>
                       ))}
                     </select>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/app/contexts/AuthContext';
 import { updateUserCourse } from '@/app/lib/courseData';
+import { GamificationManager } from '@/app/lib/gamification';
 import {
   AcademicCapIcon,
   ChartBarIcon,
@@ -19,6 +20,7 @@ interface Course {
   title: string;
   credits: number;
   level: string;
+  semester?: number;
   status: CourseStatus;
   completed: boolean;
   grade: Grade;
@@ -40,6 +42,14 @@ export default function CheckSheetPage() {
       const userCoursesKey = `user_courses_${user.id}`;
       const saved = localStorage.getItem(userCoursesKey);
       
+      // Debug logging for Master's students
+      if (user.degreeType && (user.degreeType.startsWith('M.') || user.degreeType.includes('Master'))) {
+        console.log(`Loading courses for Master's student: ${user.name}`);
+        console.log(`Degree Type: ${user.degreeType}`);
+        console.log(`Course/Major: ${user.course}`);
+        console.log(`Saved courses:`, saved ? JSON.parse(saved) : 'None');
+      }
+      
       if (saved) {
         try {
           const userCourses = JSON.parse(saved);
@@ -55,7 +65,7 @@ export default function CheckSheetPage() {
       } else if (user.course) {
         // Initialize courses for existing users who don't have courses yet
         const { initializeUserCourses } = await import('@/app/lib/courseData');
-        initializeUserCourses(user.id, user.course);
+        initializeUserCourses(user.id, user.course, user.degreeType);
         const newSaved = localStorage.getItem(userCoursesKey);
         if (newSaved) {
           const userCourses = JSON.parse(newSaved);
@@ -124,6 +134,15 @@ export default function CheckSheetPage() {
     const userCoursesKey = `user_courses_${user.id}`;
     localStorage.setItem(userCoursesKey, JSON.stringify(updatedCourses));
     window.dispatchEvent(new Event('storage'));
+
+    // Trigger Gamification Update if grade is passing
+    if (grade && grade !== 'F' && grade !== 'E') {
+      const course = courses.find(c => c.id === courseId);
+      if (course) {
+        const manager = new GamificationManager(user.id);
+        manager.processCourseCompletion(grade, course.credits);
+      }
+    }
   };
 
   const resetData = async () => {
@@ -170,6 +189,30 @@ export default function CheckSheetPage() {
     window.print();
   };
 
+  const refreshCourses = async () => {
+    if (!user) return;
+    
+    setLoading(true);
+    
+    // Force reinitialize courses
+    const { db } = await import('@/app/lib/normalizedDatabase');
+    db.forceReinitializeStudentCourses(user.id, user.course || '', user.degreeType);
+    
+    // Reload courses
+    const userCoursesKey = `user_courses_${user.id}`;
+    const saved = localStorage.getItem(userCoursesKey);
+    if (saved) {
+      const userCourses = JSON.parse(saved);
+      const mappedCourses = userCourses.map((c: any) => ({
+        ...c,
+        status: c.completed ? 'Completed' : 'Not Started'
+      }));
+      setCourses(mappedCourses);
+    }
+    
+    setLoading(false);
+  };
+
   const calculateLevelStats = (level: string) => {
     const levelCourses = courses.filter(c => c.level === level);
     const completed = levelCourses.filter(c => c.completed).length;
@@ -192,15 +235,48 @@ export default function CheckSheetPage() {
     return totalCredits > 0 ? totalPoints / totalCredits : 0;
   };
 
-  const levels = ['100L', '200L', '300L', '400L'];
+  // Include all possible levels including Master's levels
+  const isMasters = user?.degreeType && (user.degreeType.startsWith('M.') || user.degreeType.includes('Master') || user.degreeType.includes('MBA'));
+
+  let sections: string[] = [];
+  if (isMasters) {
+    sections = ['Semester 1', 'Semester 2', 'Semester 3', 'Semester 4'];
+    // Filter to only show semesters that have courses
+    sections = sections.filter(sem => {
+       const semNum = parseInt(sem.split(' ')[1]);
+       return courses.some(c => c.semester === semNum);
+    });
+  } else {
+     // Ensure 100L-400L are always shown
+     sections = ['100L', '200L', '300L', '400L'];
+  }
+
   const filteredCourses = selectedLevel === 'all' 
     ? courses 
-    : courses.filter(c => c.level === selectedLevel);
+    : courses.filter(c => {
+        if (isMasters && selectedLevel.startsWith('Semester')) {
+           const semNum = parseInt(selectedLevel.split(' ')[1]);
+           return c.semester === semNum;
+        }
+        return c.level === selectedLevel;
+      });
 
-  const groupedCourses = levels.reduce((acc, level) => {
-    acc[level] = courses.filter(c => c.level === level);
+  const groupedCourses = sections.reduce((acc, section) => {
+    if (isMasters) {
+       const semNum = parseInt(section.split(' ')[1]);
+       acc[section] = courses.filter(c => c.semester === semNum);
+    } else {
+       acc[section] = courses.filter(c => c.level === section);
+    }
     return acc;
   }, {} as Record<string, Course[]>);
+
+  const calculateSectionStats = (section: string) => {
+    const sectionCourses = groupedCourses[section] || [];
+    const completed = sectionCourses.filter(c => c.completed).length;
+    const total = sectionCourses.length;
+    return { completed, total, percentage: total > 0 ? (completed / total) * 100 : 0 };
+  };
 
   if (loading) {
     return (
@@ -260,21 +336,21 @@ export default function CheckSheetPage() {
               : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
           }`}
         >
-          All Levels
+          {isMasters ? 'All Semesters' : 'All Levels'}
         </button>
-        {levels.map(level => {
-          const stats = calculateLevelStats(level);
+        {sections.map(section => {
+          const stats = calculateSectionStats(section);
           return (
             <button
-              key={level}
-              onClick={() => setSelectedLevel(level)}
+              key={section}
+              onClick={() => setSelectedLevel(section)}
               className={`px-4 py-2 rounded-lg text-sm font-medium ${
-                selectedLevel === level
+                selectedLevel === section
                   ? 'bg-blue-600 text-white'
                   : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
               }`}
             >
-              {level} ({stats.completed}/{stats.total})
+              {section} ({stats.completed}/{stats.total})
             </button>
           );
         })}
@@ -283,16 +359,16 @@ export default function CheckSheetPage() {
       {/* Course Levels */}
       {selectedLevel === 'all' ? (
         <div className="space-y-8">
-          {levels.map(level => {
-            const levelCourses = groupedCourses[level];
-            const stats = calculateLevelStats(level);
-            const gpa = calculateGPA(levelCourses);
+          {sections.map(section => {
+            const sectionCourses = groupedCourses[section];
+            const stats = calculateSectionStats(section);
+            const gpa = calculateGPA(sectionCourses);
 
             return (
-              <div key={level} className="bg-white rounded-lg shadow">
+              <div key={section} className="bg-white rounded-lg shadow">
                 <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-lg font-semibold text-gray-900">{level} Courses</h2>
+                    <h2 className="text-lg font-semibold text-gray-900">{section} Courses</h2>
                     <div className="flex items-center gap-4 text-sm">
                       <span className="text-gray-600">
                         Progress: <span className="font-semibold">{stats.percentage.toFixed(0)}%</span>
@@ -311,7 +387,7 @@ export default function CheckSheetPage() {
                 </div>
                 <div className="p-6">
                   <div className="space-y-3">
-                    {levelCourses.map(course => (
+                    {sectionCourses.map(course => (
                       <CourseItem
                         key={course.id}
                         course={course}

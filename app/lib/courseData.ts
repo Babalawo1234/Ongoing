@@ -78,9 +78,9 @@ function buildSchools(): Record<string, string[]> {
 export const SCHOOLS = buildSchools();
 
 // Function to initialize courses for a user based on their major
-export function initializeUserCourses(userId: string, major: string): void {
+export function initializeUserCourses(userId: string, major: string, degreeType?: string): void {
   // Delegate to normalized database
-  db.initializeStudentCourses(userId, major);
+  db.initializeStudentCourses(userId, major, degreeType);
   
   // Also save in old format for backward compatibility
   const userCoursesKey = `user_courses_${userId}`;
@@ -148,6 +148,49 @@ export function getCoursesForMajor(major: string): CourseDefinition[] {
 // Get all available majors
 export function getAvailableMajors(): string[] {
   return Object.keys(COURSE_CURRICULA);
+}
+
+/**
+ * Utility function to fix existing Master's students who might have Bachelor's courses
+ * Call this from browser console: fixMastersStudentCourses()
+ */
+export function fixMastersStudentCourses(): void {
+  if (typeof window === 'undefined') {
+    console.log('This function can only be run in the browser');
+    return;
+  }
+
+  const usersData = localStorage.getItem('aun_checksheet_users');
+  if (!usersData) {
+    console.log('No users found');
+    return;
+  }
+
+  const users = JSON.parse(usersData);
+  const mastersStudents = users.filter((user: any) => 
+    user.degreeType && (user.degreeType.startsWith('M.') || user.degreeType.includes('Master'))
+  );
+
+  console.log(`Found ${mastersStudents.length} Master's students`);
+
+  mastersStudents.forEach((student: any) => {
+    console.log(`Fixing courses for ${student.name} (${student.course} - ${student.degreeType})`);
+    db.forceReinitializeStudentCourses(student.id, student.course, student.degreeType);
+  });
+
+  console.log('Master\'s student courses have been fixed!');
+}
+
+// Extend window interface for TypeScript
+declare global {
+  interface Window {
+    fixMastersStudentCourses?: () => void;
+  }
+}
+
+// Make it available globally for console access
+if (typeof window !== 'undefined') {
+  window.fixMastersStudentCourses = fixMastersStudentCourses;
 }
 
 // Get majors by school

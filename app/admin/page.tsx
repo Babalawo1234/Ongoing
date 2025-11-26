@@ -171,7 +171,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Quick Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
         <StatCard
           title="Total Students"
           value={stats.totalStudents}
@@ -210,7 +210,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Students by Level & System Info */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-8">
         <div className="stat-card bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-all duration-500" style={{ animationDelay: '400ms' }}>
           <div className="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">Students by Academic Level</h2>
@@ -291,7 +291,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Academic Performance Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8">
         <StatCard
           title="Total Programs"
           value={stats.totalPrograms}
@@ -323,7 +323,7 @@ export default function AdminDashboard() {
       {/* Quick Actions */}
       <div className="stat-card bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-8" style={{ animationDelay: '900ms' }}>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Quick Actions</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <button 
             onClick={() => router.push('/admin/students')}
             className="group px-6 py-4 bg-gradient-to-br from-blue-500 to-cyan-600 text-white rounded-xl hover:from-blue-600 hover:to-cyan-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 font-semibold"

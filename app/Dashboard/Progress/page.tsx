@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/app/contexts/AuthContext';
+import ProgressRoadmap from '@/app/components/ProgressRoadmap';
 import {
   CheckCircleIcon,
   ClockIcon,
@@ -64,18 +65,42 @@ export default function ProgressPage() {
   }, [user]);
 
   const calculateRequirements = (courses: any[]) => {
-    const levels = ['100L', '200L', '300L', '400L'];
-    const reqs: DegreeRequirement[] = levels.map(level => {
-      const levelCourses = courses.filter((c: any) => c.level === level);
-      const completed = levelCourses.filter((c: any) => c.completed).length;
-      const total = levelCourses.length;
-      return {
-        category: `${level} Courses`,
-        required: total,
-        completed,
-        percentage: total > 0 ? (completed / total) * 100 : 0,
-      };
-    });
+    // Determine if user is Master's student
+    const isMasterStudent = user?.degreeType && 
+      (user.degreeType.startsWith('M.') || user.degreeType.includes('Master'));
+    
+    let reqs: DegreeRequirement[];
+    
+    if (isMasterStudent) {
+      // For Master's students, show 4 semesters
+      const semesters = ['Semester 1', 'Semester 2', 'Semester 3', 'Semester 4'];
+      reqs = semesters.map((semesterName, index) => {
+        const semesterNum = index + 1;
+        const semesterCourses = courses.filter((c: any) => c.semester === semesterNum);
+        const completed = semesterCourses.filter((c: any) => c.completed).length;
+        const total = semesterCourses.length;
+        return {
+          category: semesterName,
+          required: total,
+          completed,
+          percentage: total > 0 ? (completed / total) * 100 : 0,
+        };
+      });
+    } else {
+      // For Bachelor's students, show 100L-400L
+      const levels = ['100L', '200L', '300L', '400L'];
+      reqs = levels.map(level => {
+        const levelCourses = courses.filter((c: any) => c.level === level);
+        const completed = levelCourses.filter((c: any) => c.completed).length;
+        const total = levelCourses.length;
+        return {
+          category: `${level} Courses`,
+          required: total,
+          completed,
+          percentage: total > 0 ? (completed / total) * 100 : 0,
+        };
+      });
+    }
 
     setRequirements(reqs);
 
@@ -217,22 +242,28 @@ export default function ProgressPage() {
       </div>
 
       {/* Legend */}
-      <div className="mt-6 bg-white rounded-lg shadow p-6">
-        <h3 className="text-sm font-semibold text-gray-900 mb-3">Status Legend</h3>
+      <div className="mt-6 bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Status Legend</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-green-600 rounded" />
-            <span className="text-sm text-gray-700">Completed (100%)</span>
+            <span className="text-sm text-gray-700 dark:text-gray-300">Completed (100%)</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-blue-600 rounded" />
-            <span className="text-sm text-gray-700">In Progress (50-99%)</span>
+            <span className="text-sm text-gray-700 dark:text-gray-300">In Progress (50-99%)</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-yellow-600 rounded" />
-            <span className="text-sm text-gray-700">Started (0-49%)</span>
+            <span className="text-sm text-gray-700 dark:text-gray-300">Started (0-49%)</span>
           </div>
         </div>
+      </div>
+
+      {/* Visual Roadmap */}
+      <div className="mt-8">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Academic Roadmap</h2>
+        {user && <ProgressRoadmap userId={user.id} degreeType={user.degreeType} />}
       </div>
     </div>
   );

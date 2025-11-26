@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug User - bola1@aun.edu.ng</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; }
+        .section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 4px solid #4CAF50;
+        }
+        .error {
+            border-left-color: #f44336;
+            background: #ffebee;
+        }
+        .success {
+            border-left-color: #4CAF50;
+            background: #e8f5e9;
+        }
+        pre {
+            background: #263238;
+            color: #aed581;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #1976D2;
+        }
+        .warning {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Debug User: bola1@aun.edu.ng</h1>
+        
+        <div id="output"></div>
+        
+        <div style="margin-top: 20px;">
+            <button onclick="checkUser()">Check User Data</button>
+            <button onclick="checkCourses()">Check Courses</button>
+            <button onclick="checkGamification()">Check Gamification</button>
+            <button onclick="fixUser()">Fix User Data</button>
+            <button onclick="clearAll()">Clear All Data</button>
+        </div>
+    </div>
+
+    <script>
+        const targetEmail = 'bola1@aun.edu.ng';
+        const output = document.getElementById('output');
+
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `section ${type}`;
+            div.innerHTML = message;
+            output.appendChild(div);
+        }
+
+        function checkUser() {
+            output.innerHTML = '';
+            log('<h2>📋 Checking User Data...</h2>');
+            
+            // Check all users
+            const usersData = localStorage.getItem('aun_checksheet_users');
+            if (!usersData) {
+                log('❌ No users found in localStorage!', 'error');
+                return;
+            }
+            
+            const users = JSON.parse(usersData);
+            log(`✅ Found ${users.length} total users in system`, 'success');
+            
+            // Find specific user
+            const user = users.find(u => u.email === targetEmail);
+            
+            if (!user) {
+                log(`❌ User "${targetEmail}" NOT FOUND!`, 'error');
+                log('<h3>All registered emails:</h3><pre>' + 
+                    users.map(u => u.email).join('\n') + '</pre>');
+                return;
+            }
+            
+            log(`✅ User "${targetEmail}" FOUND!`, 'success');
+            log('<h3>User Details:</h3><pre>' + JSON.stringify(user, null, 2) + '</pre>');
+            
+            // Check session
+            const sessionUser = sessionStorage.getItem('aun_checksheet_current_user');
+            if (sessionUser) {
+                const currentUser = JSON.parse(sessionUser);
+                if (currentUser.email === targetEmail) {
+                    log('✅ User is currently logged in (session active)', 'success');
+                } else {
+                    log(`⚠️ Different user is logged in: ${currentUser.email}`, 'warning');
+                }
+            } else {
+                log('⚠️ No active session found', 'warning');
+            }
+        }
+
+        function checkCourses() {
+            output.innerHTML = '';
+            log('<h2>📚 Checking Courses...</h2>');
+            
+            const usersData = localStorage.getItem('aun_checksheet_users');
+            if (!usersData) {
+                log('❌ No users found!', 'error');
+                return;
+            }
+            
+            const users = JSON.parse(usersData);
+            const user = users.find(u => u.email === targetEmail);
+            
+            if (!user) {
+                log(`❌ User "${targetEmail}" not found!`, 'error');
+                return;
+            }
+            
+            log(`✅ User found: ${user.name}`, 'success');
+            log(`📖 Program: ${user.course || 'Not set'}`);
+            log(`🎓 Degree: ${user.degreeType || 'Not set'}`);
+            
+            // Check user courses
+            const userCoursesKey = `user_courses_${user.id}`;
+            const coursesData = localStorage.getItem(userCoursesKey);
+            
+            if (!coursesData) {
+                log('❌ No courses found for this user!', 'error');
+                log('💡 Courses need to be initialized. Click "Fix User Data" button.', 'warning');
+                return;
+            }
+            
+            const courses = JSON.parse(coursesData);
+            log(`✅ Found ${courses.length} courses`, 'success');
+            
+            // Group by level
+            const byLevel = {};
+            courses.forEach(c => {
+                const level = c.level || 'Unknown';
+                if (!byLevel[level]) byLevel[level] = [];
+                byLevel[level].push(c);
+            });
+            
+            log('<h3>Courses by Level:</h3>');
+            Object.keys(byLevel).sort().forEach(level => {
+                const levelCourses = byLevel[level];
+                const completed = levelCourses.filter(c => c.completed).length;
+                log(`<strong>${level}:</strong> ${completed}/${levelCourses.length} completed`);
+            });
+            
+            log('<h3>Sample Courses:</h3><pre>' + 
+                JSON.stringify(courses.slice(0, 5), null, 2) + '</pre>');
+        }
+
+        function checkGamification() {
+            output.innerHTML = '';
+            log('<h2>🎮 Checking Gamification Data...</h2>');
+            
+            const usersData = localStorage.getItem('aun_checksheet_users');
+            if (!usersData) {
+                log('❌ No users found!', 'error');
+                return;
+            }
+            
+            const users = JSON.parse(usersData);
+            const user = users.find(u => u.email === targetEmail);
+            
+            if (!user) {
+                log(`❌ User "${targetEmail}" not found!`, 'error');
+                return;
+            }
+            
+            const gamKey = `gamification_${user.id}`;
+            const gamData = localStorage.getItem(gamKey);
+            
+            if (!gamData) {
+                log('❌ No gamification data found!', 'error');
+                log('💡 Gamification will be initialized when user completes first course.', 'warning');
+                return;
+            }
+            
+            const gam = JSON.parse(gamData);
+            log('✅ Gamification data found!', 'success');
+            log('<h3>Gamification Stats:</h3><pre>' + JSON.stringify(gam, null, 2) + '</pre>');
+        }
+
+        function fixUser() {
+            output.innerHTML = '';
+            log('<h2>🔧 Fixing User Data...</h2>');
+            
+            const usersData = localStorage.getItem('aun_checksheet_users');
+            if (!usersData) {
+                log('❌ No users found!', 'error');
+                return;
+            }
+            
+            const users = JSON.parse(usersData);
+            const user = users.find(u => u.email === targetEmail);
+            
+            if (!user) {
+                log(`❌ User "${targetEmail}" not found!`, 'error');
+                return;
+            }
+            
+            log(`✅ User found: ${user.name}`, 'success');
+            
+            // Check if courses exist
+            const userCoursesKey = `user_courses_${user.id}`;
+            const existingCourses = localStorage.getItem(userCoursesKey);
+            
+            if (existingCourses) {
+                log('⚠️ User already has courses. Do you want to reinitialize?', 'warning');
+                if (!confirm('This will reset all course progress. Continue?')) {
+                    log('❌ Operation cancelled', 'error');
+                    return;
+                }
+                localStorage.removeItem(userCoursesKey);
+            }
+            
+            log('🔄 Initializing courses...', 'warning');
+            
+            // This would need to call the actual initialization function
+            // For now, just show what needs to be done
+            log(`
+                <h3>Manual Fix Required:</h3>
+                <p>Open browser console and run:</p>
+                <pre>
+// Import the function
+import { db } from '@/app/lib/normalizedDatabase';
+
+// Initialize courses for user
+db.initializeStudentCourses('${user.id}', '${user.course}', '${user.degreeType}');
+
+// Or force reinitialize
+db.forceReinitializeStudentCourses('${user.id}', '${user.course}', '${user.degreeType}');
+                </pre>
+                <p><strong>OR</strong> have the user log out and log back in.</p>
+            `, 'warning');
+        }
+
+        function clearAll() {
+            if (!confirm('⚠️ This will clear ALL user data! Are you sure?')) {
+                return;
+            }
+            
+            output.innerHTML = '';
+            log('<h2>🗑️ Clearing All Data...</h2>', 'warning');
+            
+            const keys = Object.keys(localStorage);
+            keys.forEach(key => {
+                if (key.includes('aun') || key.includes('user_courses') || key.includes('gamification')) {
+                    localStorage.removeItem(key);
+                    log(`Removed: ${key}`);
+                }
+            });
+            
+            sessionStorage.clear();
+            log('✅ All data cleared!', 'success');
+            log('💡 Refresh the page and sign up again.', 'warning');
+        }
+
+        // Auto-run check on load
+        window.onload = () => {
+            checkUser();
+        };
+    </script>
+</body>
+</html>
