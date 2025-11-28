@@ -70,6 +70,7 @@ export default function ManageCoursesPage() {
         course_name: course.course_name,
         credits: course.credits,
         department_id: course.department_id,
+        catalog_year_id: 1, // Default catalog year when editing
       });
     } else {
       setEditingCourse(null);
@@ -94,7 +95,7 @@ export default function ManageCoursesPage() {
 
     // Save to normalized database
     const coursesData = db.getCourses();
-    
+
     if (editingCourse) {
       // Update existing course
       const updatedCourses = coursesData.map(c =>
@@ -124,12 +125,12 @@ export default function ManageCoursesPage() {
 
   const handleAssignCourse = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!selectedCourse) return;
 
     // Get existing program courses
     const programCourses = db.getProgramCourses();
-    
+
     // Check if already assigned
     const exists = programCourses.some(
       pc => pc.program_id === assignmentData.program_id && pc.course_id === selectedCourse.course_id
@@ -182,13 +183,13 @@ export default function ManageCoursesPage() {
       if (user.course === program.program_name) {
         const userCoursesKey = `user_courses_${user.id}`;
         const existingCourses = localStorage.getItem(userCoursesKey);
-        
+
         if (existingCourses) {
           const courses = JSON.parse(existingCourses);
-          
+
           // Check if course already exists
           const courseExists = courses.some((c: any) => c.code === course.course_code);
-          
+
           if (!courseExists) {
             // Add new course to student's course list
             const newCourse = {
@@ -202,7 +203,7 @@ export default function ManageCoursesPage() {
               completed: false,
               grade: '',
             };
-            
+
             courses.push(newCourse);
             localStorage.setItem(userCoursesKey, JSON.stringify(courses));
             updatedCount++;

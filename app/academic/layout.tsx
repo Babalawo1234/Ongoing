@@ -12,6 +12,7 @@ import {
   ArrowRightOnRectangleIcon,
   BookOpenIcon,
   Cog6ToothIcon,
+  DocumentTextIcon,
 } from '@heroicons/react/24/outline';
 
 export default function AcademicLayout({
@@ -50,6 +51,7 @@ export default function AcademicLayout({
     { name: 'Dashboard', href: '/academic', icon: HomeIcon },
     { name: 'Course Tracking', href: '/academic/courses', icon: BookOpenIcon },
     { name: 'Student Tracking', href: '/academic/students', icon: UserGroupIcon },
+    { name: 'Student Progress', href: '/academic/student-progress', icon: DocumentTextIcon },
     { name: 'Settings', href: '/academic/settings', icon: Cog6ToothIcon },
   ];
 

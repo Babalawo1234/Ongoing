@@ -10,7 +10,9 @@ import {
   TrophyIcon,
   ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
-import StatCard from '@/app/components/StatCard';
+import StatCard from '@/app/components/ui/StatCard';
+import Breadcrumb from '@/app/components/ui/Breadcrumb';
+import LoadingSkeleton from '@/app/components/ui/LoadingSkeleton';
 import { db } from '@/app/lib/normalizedDatabase';
 
 interface SystemStats {
@@ -164,50 +166,63 @@ export default function AdminDashboard() {
 
   return (
     <div className="page-content">
-      {/* Header */}
+      <Breadcrumb
+        items={[
+          { label: 'Dashboard', href: '/admin' },
+        ]}
+        className="mb-6"
+      />
+
       <div className="mb-8">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent mb-2">Admin Dashboard</h1>
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent mb-2">
+          Admin Dashboard
+        </h1>
         <p className="text-lg text-gray-600 dark:text-gray-400">System overview and key metrics</p>
       </div>
 
       {/* Quick Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
-        <StatCard
-          title="Total Students"
-          value={stats.totalStudents}
-          subtitle={`${stats.activeStudents} active`}
-          icon={<UsersIcon className="w-full h-full" />}
-          gradient="from-blue-500 to-cyan-600"
-          delay={0}
-        />
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
+          <LoadingSkeleton type="stat" count={4} />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
+          <StatCard
+            title="Total Students"
+            value={stats.totalStudents}
+            subtitle={`${stats.activeStudents} active`}
+            icon={<UsersIcon />}
+            color="blue"
+            onClick={() => router.push('/admin/students')}
+          />
 
-        <StatCard
-          title="Average GPA"
-          value={stats.averageGPA.toFixed(2)}
-          subtitle="System-wide"
-          icon={<ChartBarIcon className="w-full h-full" />}
-          gradient="from-green-500 to-emerald-600"
-          delay={100}
-        />
+          <StatCard
+            title="Average GPA"
+            value={stats.averageGPA.toFixed(2)}
+            subtitle="System-wide"
+            icon={<ChartBarIcon />}
+            color="green"
+          />
 
-        <StatCard
-          title="Dean's List"
-          value={stats.deansListStudents}
-          subtitle="GPA ≥ 4.5"
-          icon={<TrophyIcon className="w-full h-full" />}
-          gradient="from-purple-500 to-pink-600"
-          delay={200}
-        />
+          <StatCard
+            title="Dean's List"
+            value={stats.deansListStudents}
+            subtitle="GPA ≥ 4.5"
+            icon={<TrophyIcon />}
+            color="purple"
+            trend={{ value: 12, isPositive: true, label: 'vs last semester' }}
+          />
 
-        <StatCard
-          title="On Probation"
-          value={stats.probationStudents}
-          subtitle="GPA < 2.0"
-          icon={<ExclamationTriangleIcon className="w-full h-full" />}
-          gradient="from-red-500 to-orange-600"
-          delay={300}
-        />
-      </div>
+          <StatCard
+            title="On Probation"
+            value={stats.probationStudents}
+            subtitle="GPA < 2.0"
+            icon={<ExclamationTriangleIcon />}
+            color="red"
+            trend={{ value: 5, isPositive: false, label: 'vs last semester' }}
+          />
+        </div>
+      )}
 
       {/* Students by Level & System Info */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-8">
@@ -296,27 +311,25 @@ export default function AdminDashboard() {
           title="Total Programs"
           value={stats.totalPrograms}
           subtitle="Active programs"
-          icon={<AcademicCapIcon className="w-full h-full" />}
-          gradient="from-blue-500 to-cyan-600"
-          delay={600}
+          icon={<AcademicCapIcon />}
+          color="blue"
         />
 
         <StatCard
           title="Departments"
           value={stats.totalDepartments}
           subtitle="Across all schools"
-          icon={<ChartBarIcon className="w-full h-full" />}
-          gradient="from-green-500 to-emerald-600"
-          delay={700}
+          icon={<ChartBarIcon />}
+          color="green"
         />
 
         <StatCard
           title="Course Catalog"
           value={stats.totalCourses}
           subtitle="Total courses"
-          icon={<BookOpenIcon className="w-full h-full" />}
-          gradient="from-purple-500 to-pink-600"
-          delay={800}
+          icon={<BookOpenIcon />}
+          color="purple"
+          onClick={() => router.push('/admin/courses')}
         />
       </div>
 

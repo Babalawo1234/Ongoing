@@ -31,7 +31,7 @@ interface Grade {
   year: string;
 }
 
-export default function GradesPage() {
+export default function AcademicGradesPage() {
   const [students, setStudents] = useState<Student[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
   const [grades, setGrades] = useState<Grade[]>([]);
@@ -152,7 +152,7 @@ export default function GradesPage() {
     <div>
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Grade Management</h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">Enter and manage student grades</p>
+        <p className="mt-2 text-gray-600 dark:text-gray-400">View and manage student grades</p>
       </div>
 
       {/* Student Selection */}
@@ -248,7 +248,7 @@ export default function GradesPage() {
                             <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300">
                               {course.title}
                             </td>
-                            <td className="px-4 py-3 text-sm text-gray-700 text-center">
+                            <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300 text-center">
                               {course.credits}
                             </td>
                             <td className="px-4 py-3 text-center">
@@ -329,7 +329,7 @@ export default function GradesPage() {
             </div>
           ) : (
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-12 text-center border border-gray-200 dark:border-gray-700">
-              <p className="text-gray-500 dark:text-gray-400">Select a student to manage grades</p>
+              <p className="text-gray-500 dark:text-gray-400">Select a student to view and manage grades</p>
             </div>
           )}
         </div>
@@ -340,27 +340,27 @@ export default function GradesPage() {
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Grade Scale</h3>
         <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
           <div className="text-center">
-            <div className="bg-green-100 text-green-800 px-3 py-2 rounded-lg font-semibold mb-1">A</div>
+            <div className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 px-3 py-2 rounded-lg font-semibold mb-1">A</div>
             <p className="text-xs text-gray-600 dark:text-gray-400">5.0 Points</p>
           </div>
           <div className="text-center">
-            <div className="bg-blue-100 text-blue-800 px-3 py-2 rounded-lg font-semibold mb-1">B</div>
+            <div className="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 px-3 py-2 rounded-lg font-semibold mb-1">B</div>
             <p className="text-xs text-gray-600 dark:text-gray-400">4.0 Points</p>
           </div>
           <div className="text-center">
-            <div className="bg-yellow-100 text-yellow-800 px-3 py-2 rounded-lg font-semibold mb-1">C</div>
+            <div className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400 px-3 py-2 rounded-lg font-semibold mb-1">C</div>
             <p className="text-xs text-gray-600 dark:text-gray-400">3.0 Points</p>
           </div>
           <div className="text-center">
-            <div className="bg-orange-100 text-orange-800 px-3 py-2 rounded-lg font-semibold mb-1">D</div>
+            <div className="bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400 px-3 py-2 rounded-lg font-semibold mb-1">D</div>
             <p className="text-xs text-gray-600 dark:text-gray-400">2.0 Points</p>
           </div>
           <div className="text-center">
-            <div className="bg-orange-100 text-orange-800 px-3 py-2 rounded-lg font-semibold mb-1">E</div>
+            <div className="bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400 px-3 py-2 rounded-lg font-semibold mb-1">E</div>
             <p className="text-xs text-gray-600 dark:text-gray-400">1.0 Point</p>
           </div>
           <div className="text-center">
-            <div className="bg-red-100 text-red-800 px-3 py-2 rounded-lg font-semibold mb-1">F</div>
+            <div className="bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 px-3 py-2 rounded-lg font-semibold mb-1">F</div>
             <p className="text-xs text-gray-600 dark:text-gray-400">0.0 Points</p>
           </div>
         </div>

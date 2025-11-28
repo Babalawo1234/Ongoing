@@ -99,45 +99,65 @@ export default function CheckSheetPage() {
     return () => window.removeEventListener('storage', handleStorage);
   }, [user]);
 
-  const updateCourseStatus = (courseId: string, newStatus: CourseStatus) => {
+  const updateStatus = (courseId: string, newStatus: CourseStatus) => {
     if (!user) return;
-    
-    const updatedCourses = courses.map(course =>
+
+    const updatedCourses = courses.map((course) =>
       course.id === courseId
-        ? { 
-            ...course, 
+        ? {
+            ...course,
             status: newStatus,
             completed: newStatus === 'Completed',
-            grade: newStatus !== 'Completed' ? '' : course.grade
+            grade: newStatus !== 'Completed' ? '' : course.grade,
           }
         : course
     );
-    
+
     setCourses(updatedCourses);
-    
-    // Update in localStorage
+
+    // Update in localStorage with shared storage
     const userCoursesKey = `user_courses_${user.id}`;
     localStorage.setItem(userCoursesKey, JSON.stringify(updatedCourses));
+
+    // Dispatch BOTH native storage event AND custom event for real-time sync
     window.dispatchEvent(new Event('storage'));
+    const customEvent = new CustomEvent('aun-storage-change', {
+      detail: { key: userCoursesKey, value: JSON.stringify(updatedCourses) },
+    });
+    window.dispatchEvent(customEvent);
+
+    // Update student_grades if completed
+    if (newStatus === 'Completed') {
+      updateStudentGrades(courseId, updatedCourses);
+    }
   };
 
   const updateGrade = (courseId: string, grade: Grade) => {
     if (!user) return;
-    
-    const updatedCourses = courses.map(course =>
-      course.id === courseId ? { ...course, grade } : course
+
+    const updatedCourses = courses.map((course) =>
+      course.id === courseId ? { ...course, grade, completed: true, status: 'Completed' } : course
     );
-    
+
     setCourses(updatedCourses);
-    
-    // Update in localStorage
+
+    // Update in localStorage with shared storage
     const userCoursesKey = `user_courses_${user.id}`;
     localStorage.setItem(userCoursesKey, JSON.stringify(updatedCourses));
+
+    // Dispatch BOTH native storage event AND custom event for real-time sync
     window.dispatchEvent(new Event('storage'));
+    const customEvent = new CustomEvent('aun-storage-change', {
+      detail: { key: userCoursesKey, value: JSON.stringify(updatedCourses) },
+    });
+    window.dispatchEvent(customEvent);
+
+    // Update student_grades for Admin/Academic visibility
+    updateStudentGrades(courseId, updatedCourses);
 
     // Trigger Gamification Update if grade is passing
     if (grade && grade !== 'F' && grade !== 'E') {
-      const course = courses.find(c => c.id === courseId);
+      const course = courses.find((c) => c.id === courseId);
       if (course) {
         const manager = new GamificationManager(user.id);
         manager.processCourseCompletion(grade, course.credits);
@@ -145,9 +165,51 @@ export default function CheckSheetPage() {
     }
   };
 
+  // Helper function to sync grades to student_grades storage
+  const updateStudentGrades = (courseId: string, updatedCourses: any[]) => {
+    if (!user) return;
+
+    const course = updatedCourses.find((c) => c.id === courseId);
+    if (!course || !course.grade) return;
+
+    // Get existing grades
+    const storedGrades = localStorage.getItem('student_grades');
+    const allGrades = storedGrades ? JSON.parse(storedGrades) : [];
+
+    // Check if grade already exists
+    const existingGradeIndex = allGrades.findIndex(
+      (g: any) => g.studentId === user.id && g.courseId === courseId
+    );
+
+    const gradeEntry = {
+      studentId: user.id,
+      courseId: courseId,
+      grade: course.grade,
+      credits: course.credits || 0,
+      completedAt: new Date().toISOString(),
+    };
+
+    if (existingGradeIndex >= 0) {
+      // Update existing grade
+      allGrades[existingGradeIndex] = gradeEntry;
+    } else {
+      // Add new grade
+      allGrades.push(gradeEntry);
+    }
+
+    // Save back to localStorage
+    localStorage.setItem('student_grades', JSON.stringify(allGrades));
+
+    // Dispatch custom event for real-time sync
+    const customEvent = new CustomEvent('aun-storage-change', {
+      detail: { key: 'student_grades', value: JSON.stringify(allGrades) },
+    });
+    window.dispatchEvent(customEvent);
+  };
+
   const resetData = async () => {
     if (!user || !user.course) return;
-    
+
     if (confirm('Are you sure you want to reset all data? This action cannot be undone.')) {
       const userCoursesKey = `user_courses_${user.id}`;
       localStorage.removeItem(userCoursesKey);
@@ -391,7 +453,7 @@ export default function CheckSheetPage() {
                       <CourseItem
                         key={course.id}
                         course={course}
-                        onStatusChange={updateCourseStatus}
+                        onStatusChange={updateStatus}
                         onGradeChange={updateGrade}
                       />
                     ))}
@@ -408,7 +470,7 @@ export default function CheckSheetPage() {
               <CourseItem
                 key={course.id}
                 course={course}
-                onStatusChange={updateCourseStatus}
+                onStatusChange={updateStatus}
                 onGradeChange={updateGrade}
               />
             ))}

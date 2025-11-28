@@ -4,8 +4,8 @@
     "build": "next build",
     "dev": "next dev",
     "start": "next start",
-    "seed": "node -r esbuild-register prisma/seed.ts",
-    "db:seed": "node -r esbuild-register prisma/seed.ts",
+    "seed": "tsx prisma/seed.ts",
+    "db:seed": "tsx prisma/seed.ts",
     "db:setup": "node setup-database.js",
     "db:generate": "prisma generate",
     "db:push": "prisma db push"

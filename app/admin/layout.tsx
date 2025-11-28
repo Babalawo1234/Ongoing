@@ -23,9 +23,9 @@ import {
 const navigation = [
   { name: 'Dashboard', href: '/admin', icon: HomeIcon },
   { name: 'Students', href: '/admin/students', icon: UsersIcon },
+  { name: 'Student Progress', href: '/admin/student-progress', icon: ChartBarIcon },
   { name: 'Courses', href: '/admin/courses', icon: BookOpenIcon },
-  { name: 'Grades', href: '/admin/grades', icon: DocumentTextIcon },
-  { name: 'Reports', href: '/admin/reports', icon: ChartBarIcon },
+  { name: 'Reports', href: '/admin/reports', icon: DocumentTextIcon },
   { name: 'Settings', href: '/admin/settings', icon: Cog6ToothIcon },
   { name: 'Notifications', href: '/admin/notifications', icon: BellIcon },
 ];

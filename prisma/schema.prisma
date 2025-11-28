@@ -1,0 +1,153 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============= CORE ENTITIES =============
+
+model Department {
+  id             Int    @id @default(autoincrement()) @map("department_id")
+  departmentName String @map("department_name")
+  school         String
+
+  courses  Course[]
+  programs Program[]
+
+  @@map("department")
+}
+
+model CatalogYear {
+  id       Int     @id @default(autoincrement()) @map("catalog_year_id")
+  year     String
+  isActive Boolean @default(true) @map("is_active")
+
+  programs Program[]
+
+  @@map("catalog_year")
+}
+
+model Program {
+  id                   Int    @id @default(autoincrement()) @map("program_id")
+  programName          String @map("program_name")
+  degreeType           String @map("degree_type")
+  totalCreditsRequired Int    @map("total_credits_required")
+  catalogYearId        Int    @map("catalog_year_id")
+  departmentId         Int    @map("department_id")
+
+  catalogYear CatalogYear @relation(fields: [catalogYearId], references: [id])
+  department  Department  @relation(fields: [departmentId], references: [id])
+
+  programCourses  ProgramCourse[]
+  studentPrograms StudentProgram[]
+
+  @@map("program")
+}
+
+model Course {
+  id           Int    @id @default(autoincrement()) @map("course_id")
+  courseCode   String @map("course_code")
+  courseName   String @map("course_name")
+  credits      Int
+  departmentId Int    @map("department_id")
+
+  department Department @relation(fields: [departmentId], references: [id])
+
+  programCourses  ProgramCourse[]
+  prerequisites   Prerequisite[]  @relation("CoursePrerequisites")
+  prerequisiteFor Prerequisite[]  @relation("PrerequisiteCourses")
+  studentCourses  StudentCourse[]
+
+  @@map("course")
+}
+
+// ============= JUNCTION TABLES =============
+
+model ProgramCourse {
+  programId     Int     @map("program_id")
+  courseId      Int     @map("course_id")
+  core          Boolean @default(false)
+  isGened       Boolean @default(false) @map("is_gened")
+  isMajor       Boolean @default(false) @map("is_major")
+  elective      Boolean @default(false)
+  yearRequired  Int     @map("year_required")
+  semester      Int
+  concentration String?
+
+  program Program @relation(fields: [programId], references: [id])
+  course  Course  @relation(fields: [courseId], references: [id])
+
+  @@id([programId, courseId])
+  @@map("program_course")
+}
+
+model Prerequisite {
+  courseId             Int     @map("course_id")
+  prerequisiteCourseId Int     @map("prerequisite_course_id")
+  isMandatory          Boolean @default(true) @map("is_mandatory")
+
+  course             Course @relation("CoursePrerequisites", fields: [courseId], references: [id])
+  prerequisiteCourse Course @relation("PrerequisiteCourses", fields: [prerequisiteCourseId], references: [id])
+
+  @@id([courseId, prerequisiteCourseId])
+  @@map("prerequisite")
+}
+
+// ============= USER & STUDENT DATA =============
+
+model User {
+  id         String   @id @default(cuid())
+  email      String   @unique
+  password   String
+  name       String
+  fullName   String   @map("full_name")
+  role       String   @default("student") // student, admin, academic
+  school     String?
+  department String?
+  catalog    String?
+  studentId  String?  @map("student_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  studentPrograms StudentProgram[]
+  studentCourses  StudentCourse[]
+
+  @@map("user")
+}
+
+model StudentProgram {
+  studentId       String   @map("student_id")
+  programId       Int      @map("program_id")
+  declarationDate DateTime @default(now()) @map("declaration_date")
+
+  student User    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  program Program @relation(fields: [programId], references: [id])
+
+  @@id([studentId, programId])
+  @@map("student_program")
+}
+
+model StudentCourse {
+  id            String   @id @default(cuid()) @map("student_course_id")
+  studentId     String   @map("student_id")
+  courseId      Int      @map("course_id")
+  semesterTaken String?  @map("semester_taken")
+  grade         String?
+  creditsEarned Int      @default(0) @map("credits_earned")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  student User   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  course  Course @relation(fields: [courseId], references: [id])
+
+  @@unique([studentId, courseId])
+  @@index([studentId])
+  @@index([courseId])
+  @@map("student_course")
+}
